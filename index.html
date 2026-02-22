@@ -23,6 +23,8 @@
             --text-dark: #333333;
             --link: #FF0000;
             --border: #E0E0E0;
+            --radius: 16px;
+            --radius-lg: 24px;
         }
         html { scroll-behavior: smooth; }
         body {
@@ -93,10 +95,10 @@
                             right: 0,
                             zIndex: 100,
                             padding: scrolled ? '0.75rem 2rem' : '1rem 2rem',
-                            background: scrolled ? 'rgba(255, 255, 255, 0.98)' : 'var(--bg)',
+                            background: scrolled ? 'rgba(255, 255, 255, 0.98)' : 'transparent',
                             backdropFilter: scrolled ? 'blur(20px)' : 'none',
                             transition: 'all 0.4s ease',
-                            borderBottom: scrolled ? '1px solid var(--border)' : '1px solid var(--border)',
+                            borderBottom: scrolled ? '1px solid var(--border)' : 'none',
                             boxShadow: scrolled ? '0 2px 20px rgba(0,0,0,0.1)' : 'none'
                         }}
                     >
@@ -111,7 +113,7 @@
 
                             <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                                 {['Home', 'Immobili', 'Servizi', 'Chi Siamo', 'Contatti'].map((item) => (
-                                    <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ color: 'var(--text-dark)', textDecoration: 'none', fontSize: '15px', fontWeight: 400 }}>
+                                    <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ color: scrolled ? 'var(--text-dark)' : '#FFFFFF', textDecoration: 'none', fontSize: '15px', fontWeight: 400 }}>
                                         {item}
                                     </a>
                                 ))}
@@ -122,7 +124,7 @@
                                     textDecoration: 'none', 
                                     fontSize: '15px', 
                                     fontWeight: 500,
-                                    borderRadius: '0px'
+                                    borderRadius: '12px'
                                 }}>
                                     Contattaci
                                 </a>
@@ -130,25 +132,75 @@
                         </div>
                     </motion.nav>
 
-                    {/* Hero Section */}
-                    <section id="home" style={{ paddingTop: '100px', background: 'var(--bg)' }}>
-                        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '4rem 2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
-                            <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8 }}>
+                    {/* Hero Section con immagine Milano e gradiente */}
+                    <section id="home" style={{ 
+                        minHeight: '100vh', 
+                        position: 'relative', 
+                        display: 'flex', 
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden'
+                    }}>
+                        {/* Immagine di Milano */}
+                        <div style={{ 
+                            position: 'absolute', 
+                            inset: 0,
+                            zIndex: 0
+                        }}>
+                            <img 
+                                src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1920" 
+                                alt="Milano Skyline" 
+                                style={{ 
+                                    width: '100%', 
+                                    height: '100%', 
+                                    objectFit: 'cover',
+                                    objectPosition: 'center'
+                                }} 
+                            />
+                            {/* Gradient overlay dall'alto verso il basso - più scuro in alto, trasparente in basso */}
+                            <div style={{ 
+                                position: 'absolute', 
+                                inset: 0,
+                                background: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 40%, rgba(0,0,0,0.1) 70%, transparent 100%)'
+                            }} />
+                        </div>
+
+                        {/* Contenuto Hero */}
+                        <div style={{ 
+                            position: 'relative', 
+                            zIndex: 10, 
+                            maxWidth: '1400px', 
+                            margin: '0 auto', 
+                            padding: '6rem 2rem 4rem',
+                            width: '100%'
+                        }}>
+                            <motion.div 
+                                initial={{ opacity: 0, y: 30 }} 
+                                animate={{ opacity: 1, y: 0 }} 
+                                transition={{ duration: 0.8 }}
+                                style={{ 
+                                    maxWidth: '700px',
+                                    background: 'rgba(255, 255, 255, 0.95)',
+                                    padding: '3rem',
+                                    borderRadius: '24px',
+                                    boxShadow: '0 20px 60px rgba(0,0,0,0.3)'
+                                }}
+                            >
                                 <span style={{ color: 'var(--primary)', fontSize: '15px', fontWeight: 500 }}>I professionisti dell'immobiliare</span>
                                 <h1 style={{ fontSize: '36px', marginTop: '1rem', marginBottom: '1.5rem', color: 'var(--text-dark)', lineHeight: 1.2 }}>
                                     Scopri il Tuo Immobile Ideale a Milano
                                 </h1>
                                 <p style={{ fontSize: '15px', color: 'var(--text)', marginBottom: '2rem', lineHeight: 1.8 }}>
-                                    Gestiamo, valorizziamo e trasformiamo il tuo patrimonio immobiliare con un approccio personalizzato e risultati concreti.
+                                    Gestiamo, valorizziamo e trasformiamo il tuo patrimonio immobiliare con un approccio personalizzato.
                                 </p>
-                                <div style={{ display: 'flex', gap: '1rem' }}>
+                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
                                     <a href="#immobili" style={{ 
                                         padding: '1rem 2rem', 
                                         background: 'var(--primary)', 
                                         color: '#FFFFFF', 
                                         textDecoration: 'none', 
                                         fontWeight: 500,
-                                        borderRadius: '0px'
+                                        borderRadius: '12px'
                                     }}>Ricerca</a>
                                     <a href="#contact" style={{ 
                                         padding: '1rem 2rem', 
@@ -156,12 +208,9 @@
                                         color: '#FFFFFF', 
                                         textDecoration: 'none', 
                                         fontWeight: 500,
-                                        borderRadius: '0px'
+                                        borderRadius: '12px'
                                     }}>Voglio una vostra consulenza</a>
                                 </div>
-                            </motion.div>
-                            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
-                                <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800" alt="Luxury Apartment" style={{ width: '100%', borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
                             </motion.div>
                         </div>
                     </section>
@@ -172,13 +221,13 @@
                             <div style={{ 
                                 padding: '2rem', 
                                 background: 'var(--bg)', 
-                                borderRadius: '8px',
+                                borderRadius: '24px',
                                 boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
                             }}>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end' }}>
                                     <div>
                                         <label style={{ display: 'block', color: 'var(--text-dark)', fontSize: '15px', marginBottom: '0.5rem', fontWeight: 500 }}>Tipologia</label>
-                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', fontSize: '15px', fontFamily: 'Rubik' }}>
+                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', fontSize: '15px', fontFamily: 'Rubik' }}>
                                             <option>Tutte le tipologie</option>
                                             <option>Residenziale</option>
                                             <option>Commerciale</option>
@@ -187,14 +236,14 @@
                                     </div>
                                     <div>
                                         <label style={{ display: 'block', color: 'var(--text-dark)', fontSize: '15px', marginBottom: '0.5rem', fontWeight: 500 }}>Offerta</label>
-                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', fontSize: '15px', fontFamily: 'Rubik' }}>
+                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', fontSize: '15px', fontFamily: 'Rubik' }}>
                                             <option>Vendita</option>
                                             <option>Affitto</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label style={{ display: 'block', color: 'var(--text-dark)', fontSize: '15px', marginBottom: '0.5rem', fontWeight: 500 }}>Prezzo Max</label>
-                                        <input type="text" placeholder="€ 1.000.000" style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', fontSize: '15px', fontFamily: 'Rubik' }} />
+                                        <input type="text" placeholder="€ 1.000.000" style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', fontSize: '15px', fontFamily: 'Rubik' }} />
                                     </div>
                                     <button style={{ 
                                         padding: '1rem 2rem', 
@@ -202,7 +251,7 @@
                                         color: '#FFFFFF', 
                                         border: 'none', 
                                         fontWeight: 500,
-                                        borderRadius: '0px',
+                                        borderRadius: '12px',
                                         cursor: 'pointer',
                                         fontSize: '15px',
                                         fontFamily: 'Rubik'
@@ -228,17 +277,17 @@
                                 {properties.map((prop) => (
                                     <div key={prop.id} style={{ 
                                         background: 'var(--bg)', 
-                                        borderRadius: '8px', 
+                                        borderRadius: '24px', 
                                         overflow: 'hidden',
                                         boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                                         border: '1px solid var(--border)'
                                     }}>
                                         <div style={{ position: 'relative', height: '250px', overflow: 'hidden' }}>
                                             <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: '#FFFFFF', fontSize: '14px', fontWeight: 500, borderRadius: '0px' }}>
+                                            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem 1rem', background: 'var(--primary)', color: '#FFFFFF', fontSize: '14px', fontWeight: 500, borderRadius: '12px' }}>
                                                 {prop.type}
                                             </div>
-                                            <div style={{ position: 'absolute', top: '1rem', right: '1rem', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.95)', color: 'var(--text-dark)', fontSize: '16px', fontWeight: 600, borderRadius: '0px' }}>
+                                            <div style={{ position: 'absolute', top: '1rem', right: '1rem', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.95)', color: 'var(--text-dark)', fontSize: '16px', fontWeight: 600, borderRadius: '12px' }}>
                                                 €{prop.price.toLocaleString()}
                                             </div>
                                         </div>
@@ -257,7 +306,7 @@
                                                 color: '#FFFFFF', 
                                                 border: 'none', 
                                                 fontWeight: 500,
-                                                borderRadius: '0px',
+                                                borderRadius: '12px',
                                                 cursor: 'pointer',
                                                 marginTop: '1rem',
                                                 fontSize: '15px',
@@ -278,7 +327,7 @@
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
                                     fontWeight: 500,
-                                    borderRadius: '0px'
+                                    borderRadius: '12px'
                                 }}>
                                     Vedi Tutti gli Immobili
                                 </a>
@@ -301,7 +350,7 @@
                                     <div key={i} style={{ 
                                         padding: '2rem', 
                                         background: 'var(--bg)', 
-                                        borderRadius: '8px',
+                                        borderRadius: '24px',
                                         boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
                                         border: '1px solid var(--border)'
                                     }}>
@@ -337,7 +386,7 @@
                                 </div>
                             </div>
                             <div>
-                                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800" alt="Team" style={{ width: '100%', borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
+                                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800" alt="Team" style={{ width: '100%', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }} />
                             </div>
                         </div>
                     </section>
@@ -349,24 +398,31 @@
                             <h2 style={{ fontSize: '36px', marginTop: '0.5rem', marginBottom: '2rem', color: 'var(--text-dark)' }}>
                                 Inizia il Tuo Progetto
                             </h2>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1rem' }}>
-                                <input type="text" placeholder="Nome" style={{ padding: '1rem', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', fontSize: '15px', fontFamily: 'Rubik' }} />
-                                <input type="email" placeholder="Email" style={{ padding: '1rem', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', fontSize: '15px', fontFamily: 'Rubik' }} />
-                            </div>
-                            <textarea placeholder="Messaggio" rows="5" style={{ width: '100%', padding: '1rem', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '0px', marginBottom: '1rem', fontSize: '15px', fontFamily: 'Rubik' }}></textarea>
-                            <button style={{ 
-                                padding: '1rem 3rem', 
-                                background: 'var(--primary)', 
-                                color: '#FFFFFF', 
-                                border: 'none', 
-                                fontWeight: 500,
-                                borderRadius: '0px',
-                                cursor: 'pointer',
-                                fontSize: '15px',
-                                fontFamily: 'Rubik'
+                            <div style={{ 
+                                background: 'var(--bg)', 
+                                padding: '3rem', 
+                                borderRadius: '24px',
+                                boxShadow: '0 4px 20px rgba(0,0,0,0.08)'
                             }}>
-                                Invia Messaggio
-                            </button>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginBottom: '1rem' }}>
+                                    <input type="text" placeholder="Nome" style={{ padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', fontSize: '15px', fontFamily: 'Rubik' }} />
+                                    <input type="email" placeholder="Email" style={{ padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', fontSize: '15px', fontFamily: 'Rubik' }} />
+                                </div>
+                                <textarea placeholder="Messaggio" rows="5" style={{ width: '100%', padding: '1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border)', color: 'var(--text-dark)', borderRadius: '12px', marginBottom: '1rem', fontSize: '15px', fontFamily: 'Rubik' }}></textarea>
+                                <button style={{ 
+                                    padding: '1rem 3rem', 
+                                    background: 'var(--primary)', 
+                                    color: '#FFFFFF', 
+                                    border: 'none', 
+                                    fontWeight: 500,
+                                    borderRadius: '12px',
+                                    cursor: 'pointer',
+                                    fontSize: '15px',
+                                    fontFamily: 'Rubik'
+                                }}>
+                                    Invia Messaggio
+                                </button>
+                            </div>
                         </div>
                     </section>
 
