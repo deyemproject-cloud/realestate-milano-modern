@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Milano | Immobili di Prestigio</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --gold: #C9A962;
+            --gold-light: #E5D5A8;
+            --dark: #0F0F0F;
+            --dark-secondary: #1A1A1A;
+            --gray: #2A2A2A;
+            --light: #F5F5F5;
+            --white: #FFFFFF;
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-text { color: var(--gold); }
+        .gold-bg { background: var(--gold); }
+        #root { min-height: 100vh; }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+        
+        /* Glass effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        // Property data
+        const properties = [
+            { id: 1, title: "Trilocale Ristrutturato", location: "Via Fortezza, Milano", price: 249000, beds: 2, baths: 1, sqm: 65, type: "Vendita", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800", featured: true },
+            { id: 2, title: "Bilocale Ristrutturato", location: "Viale Abruzzi, Buenos Aires", price: 310000, beds: 1, baths: 1, sqm: 45, type: "Vendita", image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800", featured: true },
+            { id: 3, title: "Luminoso Appartamento", location: "Assago Centro", price: 425000, beds: 3, baths: 2, sqm: 110, type: "Vendita", image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800", featured: true },
+            { id: 4, title: "Bilocale da Ristrutturare", location: "Zona Bocconi, Milano", price: 330000, beds: 1, baths: 1, sqm: 42, type: "Vendita", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800", featured: true },
+            { id: 5, title: "Loft Seminterrato", location: "Porta Romana, Milano", price: 180000, beds: 1, baths: 1, sqm: 50, type: "Vendita", image: "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=800", featured: true },
+            { id: 6, title: "Trilocale Arco della Pace", location: "Arco della Pace, Milano", price: 925000, beds: 2, baths: 2, sqm: 110, type: "Vendita", image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800", featured: true }
+        ];
+
+        const services = [
+            { icon: "🏢", title: "Property Management", description: "Gestione completa della proprietà, manutenzioni, affitti e riduzione rischi." },
+            { icon: "🔨", title: "Rivalutazione & Ristrutturazione", description: "Trasformiamo immobili datati in opportunità con consulenza strategica." },
+            { icon: "💰", title: "Vendita Immobili", description: "Analisi di mercato, marketing su misura, assistenza completa fino al rogito." },
+            { icon: "🔍", title: "Buyers Agent", description: "Ricerca personalizzata, negoziazione e supporto legale durante l'acquisto." },
+            { icon: "📊", title: "Analisi Portafoglio", description: "Valutazione asset, proposte riqualificazione, consulenza strategica." },
+            { icon: "🤝", title: "Operazioni Immobiliari", description: "Studi fattibilità, consulenza joint venture, gestione progetti complessi." }
+        ];
+
+        const App = () => {
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <div>
+                    {/* Navigation */}
+                    <motion.nav
+                        initial={{ y: -100 }}
+                        animate={{ y: 0 }}
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            zIndex: 100,
+                            padding: scrolled ? '1rem 2rem' : '1.5rem 2rem',
+                            background: scrolled ? 'rgba(15, 15, 15, 0.95)' : 'transparent',
+                            backdropFilter: scrolled ? 'blur(20px)' : 'none',
+                            transition: 'all 0.4s ease',
+                            borderBottom: scrolled ? '1px solid rgba(201, 169, 98, 0.2)' : 'none'
+                        }}
+                    >
+                        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <a href="#home" style={{ textDecoration: 'none' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                    <div style={{ width: '40px', height: '40px', background: 'var(--gold)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>🏛</div>
+                                    <div>
+                                        <div className="font-serif" style={{ fontSize: '1.3rem', fontWeight: 600, color: 'var(--white)', letterSpacing: '0.5px' }}>
+                                            Real Estate<span style={{ color: 'var(--gold)' }}>.</span>
+                                        </div>
+                                        <div style={{ fontSize: '0.65rem', color: 'var(--gold)', letterSpacing: '2px', textTransform: 'uppercase' }}>Milano</div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
+                                {['Home', 'Immobili', 'Servizi', 'Chi Siamo', 'Contatti'].map((item) => (
+                                    <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ color: 'var(--light)', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 500, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                                        {item}
+                                    </a>
+                                ))}
+                                <a href="#contact" style={{ padding: '0.75rem 1.5rem', background: 'var(--gold)', color: 'var(--dark)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', borderRadius: '4px' }}>
+                                    Contattaci
+                                </a>
+                            </div>
+                        </div>
+                    </motion.nav>
+
+                    {/* Hero Section */}
+                    <section id="home" style={{ height: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
+                        <div style={{ position: 'absolute', inset: 0 }}>
+                            <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1920" alt="Luxury Apartment" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(15,15,15,0.95) 0%, rgba(15,15,15,0.7) 50%, rgba(15,15,15,0.4) 100%)' }} />
+                        </div>
+
+                        <div style={{ position: 'relative', zIndex: 10, maxWidth: '1400px', margin: '0 auto', padding: '0 2rem', width: '100%' }}>
+                            <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} style={{ maxWidth: '700px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                                    <div style={{ width: '60px', height: '1px', background: 'var(--gold)' }} />
+                                    <span style={{ color: 'var(--gold)', fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Immobili di Prestigio</span>
+                                </div>
+
+                                <h1 className="font-serif" style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)', fontWeight: 400, lineHeight: 1.1, marginBottom: '1.5rem', color: 'var(--white)' }}>
+                                    Scopri il Tuo
+                                    <span style={{ color: 'var(--gold)', display: 'block' }}>Immobile Ideale</span>
+                                    a Milano
+                                </h1>
+
+                                <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.7)', marginBottom: '2.5rem', lineHeight: 1.8, maxWidth: '500px' }}>
+                                    I professionisti dell'immobiliare. Gestiamo, valorizziamo e trasformiamo il tuo patrimonio immobiliare con un approccio personalizzato.
+                                </p>
+
+                                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                                    <a href="#immobili" style={{ padding: '1rem 2.5rem', background: 'var(--gold)', color: 'var(--dark)', textDecoration: 'none', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', borderRadius: '4px' }}>Esplora Immobili</a>
+                                    <a href="#contact" style={{ padding: '1rem 2.5rem', background: 'transparent', color: 'var(--white)', textDecoration: 'none', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '4px' }}>Contattaci</a>
+                                </div>
+                            </motion.div>
+                        </div>
+
+                        <div style={{ position: 'absolute', bottom: '3rem', right: '2rem', display: 'flex', gap: '3rem', padding: '2rem 3rem', background: 'rgba(15,15,15,0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(201,169,98,0.2)', borderRadius: '8px' }}>
+                            {[{ value: "500+", label: "Immobili Venduti" }, { value: "15+", label: "Anni Esperienza" }, { value: "98%", label: "Clienti Soddisfatti" }].map((stat, i) => (
+                                <div key={i} style={{ textAlign: 'center' }}>
+                                    <div className="font-serif" style={{ fontSize: '2rem', color: 'var(--gold)', fontWeight: 600 }}>{stat.value}</div>
+                                    <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>{stat.label}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Search Section */}
+                    <section style={{ padding: '4rem 2rem', background: 'var(--dark-secondary)' }}>
+                        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                            <div className="glass" style={{ padding: '2.5rem', borderRadius: '12px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', alignItems: 'end' }}>
+                                    <div>
+                                        <label style={{ display: 'block', color: 'var(--gold)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Tipologia</label>
+                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px' }}>
+                                            <option>Tutte le tipologie</option>
+                                            <option>Residenziale</option>
+                                            <option>Commerciale</option>
+                                            <option>Loft</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', color: 'var(--gold)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Offerta</label>
+                                        <select style={{ width: '100%', padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px' }}>
+                                            <option>Vendita</option>
+                                            <option>Affitto</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style={{ display: 'block', color: 'var(--gold)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>Prezzo Max</label>
+                                        <input type="text" placeholder="€ 1.000.000" style={{ width: '100%', padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px' }} />
+                                    </div>
+                                    <button style={{ padding: '1rem 2rem', background: 'var(--gold)', color: 'var(--dark)', border: 'none', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', borderRadius: '4px', cursor: 'pointer' }}>
+                                        🔍 Cerca
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Properties Section */}
+                    <section id="immobili" style={{ padding: '6rem 2rem', background: 'var(--dark)' }}>
+                        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                                <span style={{ color: 'var(--gold)', fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>In Evidenza</span>
+                                <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', color: 'var(--white)' }}>
+                                    Immobili <span style={{ color: 'var(--gold)' }}>Esclusivi</span>
+                                </h2>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '2rem' }}>
+                                {properties.map((prop) => (
+                                    <div key={prop.id} style={{ background: 'var(--dark-secondary)', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(201,169,98,0.1)' }}>
+                                        <div style={{ position: 'relative', height: '250px', overflow: 'hidden' }}>
+                                            <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '0.5rem 1rem', background: 'var(--gold)', color: 'var(--dark)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase', borderRadius: '4px' }}>{prop.type}</div>
+                                            <div style={{ position: 'absolute', top: '1rem', right: '1rem', padding: '0.5rem 1rem', background: 'rgba(15,15,15,0.8)', color: 'var(--gold)', fontSize: '0.9rem', fontWeight: 600, borderRadius: '4px' }}>€{prop.price.toLocaleString()}</div>
+                                        </div>
+                                        <div style={{ padding: '1.5rem' }}>
+                                            <h3 className="font-serif" style={{ fontSize: '1.3rem', color: 'var(--white)', marginBottom: '0.5rem' }}>{prop.title}</h3>
+                                            <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', marginBottom: '1rem' }}>📍 {prop.location}</p>
+                                            <div style={{ display: 'flex', gap: '1.5rem', padding: '1rem 0', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>🛏 {prop.beds} Camere</span>
+                                                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>🚿 {prop.baths} Bagni</span>
+                                                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem' }}>📐 {prop.sqm} mq</span>
+                                            </div>
+                                            <button style={{ width: '100%', padding: '1rem', background: 'var(--gold)', color: 'var(--dark)', border: 'none', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', borderRadius: '4px', cursor: 'pointer', marginTop: '1rem' }}>
+                                                Vedi Dettagli
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                                <a href="#" style={{ display: 'inline-block', padding: '1rem 3rem', background: 'transparent', color: 'var(--gold)', textDecoration: 'none', border: '1px solid var(--gold)', borderRadius: '4px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                    Vedi Tutti gli Immobili
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Services Section */}
+                    <section id="servizi" style={{ padding: '6rem 2rem', background: 'var(--dark-secondary)' }}>
+                        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+                                <span style={{ color: 'var(--gold)', fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Cosa Offriamo</span>
+                                <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', color: 'var(--white)' }}>
+                                    I Nostri <span style={{ color: 'var(--gold)' }}>Servizi</span>
+                                </h2>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '2rem' }}>
+                                {services.map((service, i) => (
+                                    <div key={i} style={{ padding: '2.5rem', background: 'var(--dark)', borderRadius: '12px', border: '1px solid rgba(201,169,98,0.1)' }}>
+                                        <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{service.icon}</div>
+                                        <h3 className="font-serif" style={{ fontSize: '1.3rem', color: 'var(--gold)', marginBottom: '1rem' }}>{service.title}</h3>
+                                        <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7 }}>{service.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* About Section */}
+                    <section id="chi-siamo" style={{ padding: '6rem 2rem', background: 'var(--dark)' }}>
+                        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
+                            <div>
+                                <span style={{ color: 'var(--gold)', fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Chi Siamo</span>
+                                <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', marginBottom: '1.5rem', color: 'var(--white)' }}>
+                                    Il Tuo Partner di <span style={{ color: 'var(--gold)' }}>Fiducia</span>
+                                </h2>
+                                <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, marginBottom: '1.5rem' }}>
+                                    Real Estate Milano è il tuo partner di fiducia per la gestione e valorizzazione del tuo patrimonio immobiliare. Grazie alla nostra esperienza nel settore e a un approccio personalizzato, offriamo soluzioni innovative e professionali.
+                                </p>
+                                <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, marginBottom: '2rem' }}>
+                                    Garantiamo massima trasparenza e risultati concreti. Affidati a noi per una gestione impeccabile e un ritorno garantito sui tuoi investimenti immobiliari.
+                                </p>
+                                <div style={{ display: 'flex', gap: '2rem' }}>
+                                    <div>
+                                        <div className="font-serif" style={{ fontSize: '2rem', color: 'var(--gold)' }}>15+</div>
+                                        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>Anni di Esperienza</div>
+                                    </div>
+                                    <div>
+                                        <div className="font-serif" style={{ fontSize: '2rem', color: 'var(--gold)' }}>500+</div>
+                                        <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.85rem' }}>Clienti Soddisfatti</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style={{ position: 'relative' }}>
+                                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800" alt="Team" style={{ width: '100%', borderRadius: '12px' }} />
+                                <div style={{ position: 'absolute', bottom: '-2rem', left: '-2rem', padding: '2rem', background: 'var(--gold)', color: 'var(--dark)', borderRadius: '12px' }}>
+                                    <div className="font-serif" style={{ fontSize: '1.5rem', fontWeight: 600 }}>Professionalità e Trasparenza</div>
+                                    <div style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>Il nostro impegno per te</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Contact Section */}
+                    <section id="contact" style={{ padding: '6rem 2rem', background: 'var(--dark-secondary)' }}>
+                        <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
+                            <span style={{ color: 'var(--gold)', fontSize: '0.8rem', letterSpacing: '3px', textTransform: 'uppercase' }}>Contattaci</span>
+                            <h2 className="font-serif" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', marginBottom: '2rem', color: 'var(--white)' }}>
+                                Inizia il Tuo <span style={{ color: 'var(--gold)' }}>Progetto</span>
+                            </h2>
+                            <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '3rem' }}>
+                                Siamo qui per aiutarti a trovare l'immobile perfetto o a gestire il tuo patrimonio. Contattaci per una consulenza gratuita.
+                            </p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.5rem', marginBottom: '2rem' }}>
+                                <input type="text" placeholder="Nome" style={{ padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px' }} />
+                                <input type="email" placeholder="Email" style={{ padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px' }} />
+                            </div>
+                            <textarea placeholder="Messaggio" rows="5" style={{ width: '100%', padding: '1rem', background: 'var(--dark)', border: '1px solid rgba(201,169,98,0.3)', color: 'var(--white)', borderRadius: '4px', marginBottom: '1.5rem' }}></textarea>
+                            <button style={{ padding: '1rem 3rem', background: 'var(--gold)', color: 'var(--dark)', border: 'none', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1px', borderRadius: '4px', cursor: 'pointer' }}>
+                                Invia Messaggio
+                            </button>
+                        </div>
+                    </section>
+
+                    {/* Footer */}
+                    <footer style={{ padding: '4rem 2rem 2rem', background: 'var(--dark)', borderTop: '1px solid rgba(201,169,98,0.1)' }}>
+                        <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '3rem' }}>
+                            <div>
+                                <div className="font-serif" style={{ fontSize: '1.5rem', color: 'var(--white)', marginBottom: '1rem' }}>
+                                    Real Estate<span style={{ color: 'var(--gold)' }}>.</span> Milano
+                                </div>
+                                <p style={{ color: 'rgba(255,255,255,0.6)', lineHeight: 1.7 }}>
+                                    I professionisti dell'immobiliare a Milano. Gestiamo, valorizziamo e trasformiamo il tuo patrimonio.
+                                </p>
+                            </div>
+                            <div>
+                                <h4 style={{ color: 'var(--gold)', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Link Utili</h4>
+                                {['Home', 'Immobili', 'Servizi', 'Chi Siamo', 'News', 'Contatti'].map(item => (
+                                    <a key={item} href={`#${item.toLowerCase().replace(' ', '-')}`} style={{ display: 'block', color: 'rgba(255,255,255,0.6)', textDecoration: 'none', marginBottom: '0.5rem' }}>{item}</a>
+                                ))}
+                            </div>
+                            <div>
+                                <h4 style={{ color: 'var(--gold)', marginBottom: '1rem', textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Contatti</h4>
+                                <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '0.5rem' }}>📍 Via Milano, 123 - Milano</p>
+                                <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '0.5rem' }}>📞 +39 02 1234 5678</p>
+                                <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '0.5rem' }}>✉️ info@realestatemilano.it</p>
+                            </div>
+                        </div>
+                        <div style={{ maxWidth: '1400px', margin: '3rem auto 0', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem' }}>
+                            © 2024 Real Estate Milano. Tutti i diritti riservati.
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
